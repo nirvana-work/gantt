@@ -1258,8 +1258,8 @@ class Gantt {
             this.gantt_start = date_utils.add(this.gantt_start, -2, 'year');
             this.gantt_end = date_utils.add(this.gantt_end, 2, 'year');
         } else {
-            this.gantt_start = date_utils.add(this.gantt_start, -1, 'month');
-            this.gantt_end = date_utils.add(this.gantt_end, 1, 'month');
+            this.gantt_start = date_utils.add(this.gantt_start, -5, 'day');
+            this.gantt_end = date_utils.add(this.gantt_end, 5, 'day');
         }
     }
 

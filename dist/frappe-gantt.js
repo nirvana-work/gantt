@@ -950,7 +950,8 @@ class Arrow {
         this.element = createSVG('path', {
             d: this.path,
             'data-from': this.from_task.task.id,
-            'data-to': this.to_task.task.id
+            'data-to': this.to_task.task.id,
+            class: this.to_task.task.arrow && this.to_task.task.arrow[this.from_task.task.id], 
         });
     }
 

@@ -490,10 +490,16 @@ class Bar {
             date_utils.diff(this.task._end, this.task._start, 'hour') /
             this.gantt.options.step;
         this.width = this.gantt.options.column_width * this.duration;
-        this.progress_width =
+      this.progress_width =
             this.gantt.options.column_width *
                 this.duration *
-                (this.task.progress / 100) || 0;
+        ((this.task.delay + (100 - this.task.delay) * this.task.progress / 100) / 100) || 0;
+      
+      this.delay_width =
+        this.gantt.options.column_width *
+        this.duration *
+        (this.task.delay / 100) || 0;
+      
         this.group = createSVG('g', {
             class: 'bar-wrapper ' + (this.task.custom_class || ''),
             'data-id': this.task.id
@@ -528,9 +534,10 @@ class Bar {
 
     draw() {
         this.draw_bar();
-        this.draw_progress_bar();
+      this.draw_progress_bar();
+      this.draw_delay_bar();
         this.draw_label();
-        this.draw_resize_handles();
+        // this.draw_resize_handles();
     }
 
     draw_bar() {
@@ -567,6 +574,22 @@ class Bar {
 
         animateSVG(this.$bar_progress, 'width', 0, this.progress_width);
     }
+
+  draw_delay_bar() {
+    if (this.invalid) return;
+    this.$bar_delay = createSVG('rect', {
+      x: this.x,
+      y: this.y,
+      width: this.delay_width,
+      height: this.height,
+      rx: this.corner_radius,
+      ry: this.corner_radius,
+      class: this.task.bar_delay_class || 'bar-delay',
+      append_to: this.bar_group
+    });
+
+    animateSVG(this.$bar_delay, 'width', 0, this.delay_width);
+  }
 
     draw_label() {
         createSVG('text', {

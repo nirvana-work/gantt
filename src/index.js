@@ -242,8 +242,8 @@ export default class Gantt {
       this.gantt_start = date_utils.add(this.gantt_start, -2, 'year');
       this.gantt_end = date_utils.add(this.gantt_end, 2, 'year');
     } else {
-      this.gantt_start = date_utils.add(this.gantt_start, -10, 'day');
-      this.gantt_end = date_utils.add(this.gantt_end, 10, 'day');
+      this.gantt_start = date_utils.add(this.gantt_start, -20, 'day');
+      this.gantt_end = date_utils.add(this.gantt_end, 20, 'day');
     }
   }
 

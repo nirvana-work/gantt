@@ -1,7 +1,7 @@
 import date_utils from './date_utils';
 import { $, createSVG, animateSVG } from './svg_utils';
 
-export default class Bar {
+export default class DelayBar {
   constructor(gantt, task) {
     this.set_defaults(gantt, task);
     this.prepare();
@@ -23,7 +23,7 @@ export default class Bar {
   prepare_values() {
     this.invalid = this.task.invalid;
     this.height = this.gantt.options.bar_height;
-    this.due_date_height = this.gantt.options.bar_height + this.gantt.options.padding;
+    this.due_date_height = this.gantt.options.bar_height + this.gantt.options.delay_padding;
     this.x = this.compute_x();
     this.y = this.compute_y();
     this.due_date_x = this.compute_due_date_x();
@@ -89,10 +89,10 @@ export default class Bar {
   }
 
   draw() {
-    // this.draw_due_date_bar();
-    this.draw_bar();
-    this.draw_progress_bar();
-    this.draw_label();
+    this.draw_due_date_bar();
+    // this.draw_bar();
+    // this.draw_progress_bar();
+    // this.draw_label();
     // this.draw_resize_handles();
   }
 
@@ -396,7 +396,7 @@ export default class Bar {
     return (
       this.gantt.options.header_height +
       this.gantt.options.padding / 2 +
-      this.task._index * (this.height + this.gantt.options.padding)
+      this.task._index * (this.height + this.gantt.options.padding) + 5
     );
   }
 

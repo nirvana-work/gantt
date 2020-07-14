@@ -5,6 +5,7 @@ import Arrow from './arrow';
 import Popup from './popup';
 
 import './gantt.scss';
+import DelayBar from './delay';
 
 const VIEW_MODE = {
   QUARTER_DAY: 'Quarter Day',
@@ -83,6 +84,7 @@ export default class Gantt {
       due_date_corner_radius: 2,
       arrow_curve: 5,
       padding: 18,
+      delay_padding: 8,
       view_mode: 'Day',
       date_format: 'YYYY-MM-DD',
       popup_trigger: 'click',
@@ -240,8 +242,8 @@ export default class Gantt {
       this.gantt_start = date_utils.add(this.gantt_start, -2, 'year');
       this.gantt_end = date_utils.add(this.gantt_end, 2, 'year');
     } else {
-      this.gantt_start = date_utils.add(this.gantt_start, -5, 'day');
-      this.gantt_end = date_utils.add(this.gantt_end, 5, 'day');
+      this.gantt_start = date_utils.add(this.gantt_start, -10, 'day');
+      this.gantt_end = date_utils.add(this.gantt_end, 10, 'day');
     }
   }
 
@@ -280,6 +282,7 @@ export default class Gantt {
     this.make_grid();
     this.make_dates();
     this.make_bars();
+    this.make_delay_bars();
     this.make_arrows();
     this.map_arrows_on_bars();
     this.set_width();
@@ -288,7 +291,7 @@ export default class Gantt {
 
   setup_layers() {
     this.layers = {};
-    const layers = ['grid', 'date', 'arrow', 'progress', 'bar', 'details'];
+    const layers = ['grid', 'date', 'delay', 'arrow', 'progress', 'bar', 'details'];
     // make group layers
     for (let layer of layers) {
       this.layers[layer] = createSVG('g', {
@@ -571,6 +574,15 @@ export default class Gantt {
     this.bars = this.tasks.map(task => {
       const bar = new Bar(this, task);
       this.layers.bar.appendChild(bar.group);
+      return bar;
+    });
+  }
+
+
+  make_delay_bars() {
+    this.delay_bars = this.tasks.map(task => {
+      const bar = new DelayBar(this, task);
+      this.layers.delay.appendChild(bar.group);
       return bar;
     });
   }

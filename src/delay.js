@@ -396,7 +396,7 @@ export default class DelayBar {
     return (
       this.gantt.options.header_height +
       this.gantt.options.padding / 2 +
-      this.task._index * (this.height + this.gantt.options.padding) + 5
+      this.task._index * (this.height + this.gantt.options.padding) + 4
     );
   }
 

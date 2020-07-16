@@ -84,7 +84,7 @@ export default class Gantt {
       due_date_corner_radius: 2,
       arrow_curve: 5,
       padding: 18,
-      delay_padding: 8,
+      delay_padding: 10,
       view_mode: 'Day',
       date_format: 'YYYY-MM-DD',
       popup_trigger: 'click',

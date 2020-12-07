@@ -169,7 +169,8 @@ export default class Bar {
     createSVG('text', {
       x: this.x + this.width / 2,
       y: this.y + this.height / 2,
-      innerHTML: `<span style="color:${this.task.style.textColor};">${this.task.name}</span>`,
+      style: `fill:${this.task.style.textColor}`,
+      innerHTML: this.task.name,
       class: 'bar-label',
       append_to: this.bar_group
     });

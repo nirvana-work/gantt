@@ -304,7 +304,7 @@ export default class Gantt {
 
   make_grid() {
     this.make_grid_background();
-    // this.make_grid_rows();
+    this.make_grid_rows();
     this.make_grid_header();
     // this.make_grid_ticks(); dont make vertical lines in grid
     this.make_grid_highlights();

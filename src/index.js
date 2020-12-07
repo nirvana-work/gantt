@@ -352,14 +352,15 @@ export default class Gantt {
         append_to: rows_layer
       });
 
-      createSVG('line', {
-        x1: 0,
-        y1: row_y + row_height,
-        x2: row_width,
-        y2: row_y + row_height,
-        class: 'row-line',
-        append_to: lines_layer
-      });
+      // dont create divider lines
+      // createSVG('line', {
+      //   x1: 0,
+      //   y1: row_y + row_height,
+      //   x2: row_width,
+      //   y2: row_y + row_height,
+      //   class: 'row-line',
+      //   append_to: lines_layer
+      // });
 
       row_y += this.options.bar_height + this.options.padding;
     }

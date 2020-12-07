@@ -110,6 +110,8 @@ export default class Bar {
 
     animateSVG(this.$bar, 'width', 0, this.width);
 
+    [this.$bar].velocity("transition.slideLeftIn")
+
     if (this.invalid) {
       this.$bar.classList.add('bar-invalid');
     }

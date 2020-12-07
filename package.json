@@ -43,5 +43,8 @@
   },
   "eslintIgnore": [
     "dist"
-  ]
+  ],
+  "dependencies": {
+    "velocity-animate": "^2.0.6"
+  }
 }

@@ -22,9 +22,9 @@ $handle-color: #ddd !default;
     .grid-row {
         fill: #ffffff;
     }
-    .grid-row:nth-child(even) {
-        fill: $light-bg;
-    }
+    // .grid-row:nth-child(even) {
+    //     fill: $light-bg;
+    // }
     .row-line {
         stroke: $light-border-color;
     }

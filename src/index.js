@@ -282,7 +282,8 @@ export default class Gantt {
     this.make_grid();
     this.make_dates();
     this.make_bars();
-    this.make_delay_bars();
+    // not showing delays for now
+    // this.make_delay_bars();
     this.make_arrows();
     this.map_arrows_on_bars();
     this.set_width();
@@ -303,9 +304,9 @@ export default class Gantt {
 
   make_grid() {
     this.make_grid_background();
-    this.make_grid_rows();
+    // this.make_grid_rows();
     this.make_grid_header();
-    this.make_grid_ticks();
+    // this.make_grid_ticks(); dont make vertical lines in grid
     this.make_grid_highlights();
   }
 

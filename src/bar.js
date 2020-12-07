@@ -105,6 +105,7 @@ export default class Bar {
       rx: this.corner_radius,
       ry: this.corner_radius,
       class: 'bar',
+      style: `fill:${this.task.style.background}`,
       append_to: this.bar_group
     });
 
@@ -124,6 +125,7 @@ export default class Bar {
       height: this.height,
       rx: this.corner_radius,
       ry: this.corner_radius,
+      style: `fill:${this.task.style.progress}`,
       class: 'bar-progress',
       append_to: this.bar_group
     });
@@ -167,7 +169,7 @@ export default class Bar {
     createSVG('text', {
       x: this.x + this.width / 2,
       y: this.y + this.height / 2,
-      innerHTML: this.task.name,
+      innerHTML: `<span style="color:${this.task.style.textColor};">${this.task.name}</span>`,
       class: 'bar-label',
       append_to: this.bar_group
     });

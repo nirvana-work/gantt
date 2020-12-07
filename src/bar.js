@@ -167,7 +167,8 @@ export default class Bar {
 
   draw_label() {
     createSVG('text', {
-      x: this.x + this.width / 2,
+      // x: this.x + this.width / 2,
+      x: this.x + 16,
       y: this.y + this.height / 2,
       style: `fill:${this.task.style.textColor}`,
       innerHTML: this.task.name,
@@ -453,6 +454,7 @@ export default class Bar {
   }
 
   update_label_position() {
+    return null // not repositioning label in case of overflow
     const bar = this.$bar,
       label = this.group.querySelector('.bar-label');
 

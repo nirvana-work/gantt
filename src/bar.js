@@ -454,17 +454,19 @@ export default class Bar {
   }
 
   update_label_position() {
-    return null // not repositioning label in case of overflow
     const bar = this.$bar,
       label = this.group.querySelector('.bar-label');
 
-    if (label.getBBox().width > bar.getWidth()) {
-      label.classList.add('big');
-      label.setAttribute('x', bar.getX() + bar.getWidth() + 5);
-    } else {
-      label.classList.remove('big');
-      label.setAttribute('x', bar.getX() + bar.getWidth() / 2);
-    }
+    label.setAttribute('x', bar.getX() + 16);
+
+    // if (label.getBBox().width > bar.getWidth()) {
+    //   label.classList.add('big');
+    //   label.setAttribute('x', bar.getX() + bar.getWidth() + 5);
+    // } else {
+    //   label.classList.remove('big');
+    //   label.setAttribute('x', bar.getX() + bar.getWidth() / 2);
+    // }
+    
   }
 
   update_handle_position() {

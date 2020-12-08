@@ -168,7 +168,7 @@ export default class Bar {
   draw_label() {
     createSVG('text', {
       // x: this.x + this.width / 2,
-      x: this.x + 16,
+      x: this.x + this.task.style.textPaddingLeft,
       y: this.y + this.height / 2,
       style: `fill:${this.task.style.textColor}`,
       innerHTML: this.task.name,
@@ -454,10 +454,11 @@ export default class Bar {
   }
 
   update_label_position() {
+    return null // nothing to do here
     const bar = this.$bar,
       label = this.group.querySelector('.bar-label');
 
-    label.setAttribute('x', bar.getX() + 16);
+    label.setAttribute('x', bar.getX() + this.task.style.textPaddingLeft);
 
     // if (label.getBBox().width > bar.getWidth()) {
     //   label.classList.add('big');

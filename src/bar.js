@@ -234,10 +234,33 @@ export default class Bar {
   }
 
   setup_click_event() {
-    $.on(this.group, 'focus ' + this.gantt.options.popup_trigger, e => {
+    $.on(this.group, 'focus', e => {
       if (this.action_completed) {
         // just finished a move action, wait for a few seconds
         return;
+      }
+
+      // if downstream wants to use click events for other uses, pass it on
+      if (this.gantt.options['on_focus']) {
+        this.gantt.trigger_event('focus', [this.task]);
+        return
+      }
+
+      this.show_popup();
+      this.gantt.unselect_all();
+      this.group.classList.add('active');
+    });
+
+    $.on(this.group, 'click', e => {
+      if (this.action_completed) {
+        // just finished a move action, wait for a few seconds
+        return;
+      }
+
+      // if downstream wants to use click events for other uses, pass it on
+      if (this.gantt.options['on_click']) {
+        this.gantt.trigger_event('click', [this.task]);
+        return
       }
 
       this.show_popup();
@@ -251,7 +274,7 @@ export default class Bar {
         return;
       }
 
-      this.gantt.trigger_event('click', [this.task]);
+      this.gantt.trigger_event('dblclick', [this.task]);
     });
   }
 

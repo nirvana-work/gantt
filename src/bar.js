@@ -109,7 +109,8 @@ export default class Bar {
       append_to: this.bar_group
     });
 
-    animateSVG(this.$bar, 'width', 0, this.width);
+    // animateSVG(this.$bar, 'width', 0, this.width);
+    animateSVG(this.$bar, 'x', this.x - 50, this.x);
 
     if (this.invalid) {
       this.$bar.classList.add('bar-invalid');

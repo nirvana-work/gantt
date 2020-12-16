@@ -100,7 +100,8 @@ export default class Gantt {
       // convert to Date objects
       task._start = date_utils.parse(task.start);
       task._end = date_utils.parse(task.end);
-
+      task._old_start = date_utils.parse(task.old_start)
+ 
       task._due_date_start = date_utils.parse(task.due_date_start);
       task._due_date_end = date_utils.parse(task.due_date_end);
 
@@ -288,6 +289,8 @@ export default class Gantt {
     this.map_arrows_on_bars();
     this.set_width();
     this.set_scroll_position();
+    //https://stackoverflow.com/questions/26225402/dynamic-svg-animation-only-works-once
+    this.$svg.setCurrentTime(0) // needed for animations with begin attr to kick in
   }
 
   setup_layers() {

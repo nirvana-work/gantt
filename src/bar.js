@@ -110,11 +110,10 @@ export default class Bar {
       append_to: this.bar_group
     });
 
-    animateSVG(this.$bar, 'x', this.old_x, this.x);
     if (this.gantt.options.animate_position) {
       animateSVG(this.$bar, 'x', this.old_x, this.x);
     } else {
-      animateSVG(this.$bar, 'width', 0, this.width);
+      // animateSVG(this.$bar, 'width', 0, this.width);
     }
 
     if (this.invalid) {
@@ -139,7 +138,7 @@ export default class Bar {
     if (this.gantt.options.animate_position) {
       animateSVG(this.$bar_progress, 'x', this.old_x, this.x);
     } else {
-      animateSVG(this.$bar_progress, 'width', 0, this.progress_width);
+      // animateSVG(this.$bar_progress, 'width', 0, this.progress_width);
     }
   }
 

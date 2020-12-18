@@ -25,6 +25,7 @@ export default class Bar {
     this.height = this.gantt.options.bar_height;
     this.due_date_height = this.gantt.options.bar_height + this.gantt.options.padding;
     this.x = this.compute_x();
+    this.old_x = this.compute_old_x();
     this.y = this.compute_y();
     this.due_date_x = this.compute_due_date_x();
     this.due_date_y = this.compute_due_date_y();
@@ -105,10 +106,15 @@ export default class Bar {
       rx: this.corner_radius,
       ry: this.corner_radius,
       class: 'bar',
+      style: `fill:${this.task.style.background}`,
       append_to: this.bar_group
     });
 
-    animateSVG(this.$bar, 'width', 0, this.width);
+    if (this.gantt.options.animate_position) {
+      animateSVG(this.$bar, 'x', this.old_x, this.x);
+    } else {
+      // animateSVG(this.$bar, 'width', 0, this.width);
+    }
 
     if (this.invalid) {
       this.$bar.classList.add('bar-invalid');
@@ -124,11 +130,16 @@ export default class Bar {
       height: this.height,
       rx: this.corner_radius,
       ry: this.corner_radius,
+      style: `fill:${this.task.style.progress}`,
       class: 'bar-progress',
       append_to: this.bar_group
     });
 
-    animateSVG(this.$bar_progress, 'width', 0, this.progress_width);
+    if (this.gantt.options.animate_position) {
+      animateSVG(this.$bar_progress, 'x', this.old_x, this.x);
+    } else {
+      // animateSVG(this.$bar_progress, 'width', 0, this.progress_width);
+    }
   }
 
   draw_delay_bar() {
@@ -164,15 +175,22 @@ export default class Bar {
   }
 
   draw_label() {
-    createSVG('text', {
-      x: this.x + this.width / 2,
+    this.$label = createSVG('text', {
+      // x: this.x + this.width / 2,
+      x: this.x + this.task.style.textPaddingLeft,
       y: this.y + this.height / 2,
+      style: `fill:${this.task.style.textColor}`,
       innerHTML: this.task.name,
       class: 'bar-label',
       append_to: this.bar_group
     });
     // labels get BBox in the next tick
     requestAnimationFrame(() => this.update_label_position());
+
+    if (this.gantt.options.animate_position) {
+      animateSVG(this.$label, 'x', this.old_x + this.task.style.textPaddingLeft,
+        this.x + this.task.style.textPaddingLeft);
+    }
   }
 
   draw_resize_handles() {
@@ -230,10 +248,33 @@ export default class Bar {
   }
 
   setup_click_event() {
-    $.on(this.group, 'focus ' + this.gantt.options.popup_trigger, e => {
+    $.on(this.group, 'focus', e => {
       if (this.action_completed) {
         // just finished a move action, wait for a few seconds
         return;
+      }
+
+      // if downstream wants to use click events for other uses, pass it on
+      if (this.gantt.options['on_focus']) {
+        this.gantt.trigger_event('focus', [this.task]);
+        return
+      }
+
+      this.show_popup();
+      this.gantt.unselect_all();
+      this.group.classList.add('active');
+    });
+
+    $.on(this.group, 'click', e => {
+      if (this.action_completed) {
+        // just finished a move action, wait for a few seconds
+        return;
+      }
+
+      // if downstream wants to use click events for other uses, pass it on
+      if (this.gantt.options['on_click']) {
+        this.gantt.trigger_event('click', [this.task]);
+        return
       }
 
       this.show_popup();
@@ -247,7 +288,7 @@ export default class Bar {
         return;
       }
 
-      this.gantt.trigger_event('click', [this.task]);
+      this.gantt.trigger_event('dblclick', [this.task]);
     });
   }
 
@@ -369,6 +410,21 @@ export default class Bar {
     return x;
   }
 
+  compute_old_x() {
+    const { step, column_width } = this.gantt.options;
+    const task_start = this.task._old_start;
+    const gantt_start = this.gantt.gantt_start;
+
+    const diff = date_utils.diff(task_start, gantt_start, 'hour');
+    let x = diff / step * column_width;
+
+    if (this.gantt.view_is('Month')) {
+      const diff = date_utils.diff(task_start, gantt_start, 'day');
+      x = diff * column_width / 30;
+    }
+    return x;
+  }
+
   compute_due_date_x() {
     const { step, column_width } = this.gantt.options;
     const due_date_start = this.task._due_date_start;
@@ -450,16 +506,20 @@ export default class Bar {
   }
 
   update_label_position() {
+    return null // nothing to do here
     const bar = this.$bar,
       label = this.group.querySelector('.bar-label');
 
-    if (label.getBBox().width > bar.getWidth()) {
-      label.classList.add('big');
-      label.setAttribute('x', bar.getX() + bar.getWidth() + 5);
-    } else {
-      label.classList.remove('big');
-      label.setAttribute('x', bar.getX() + bar.getWidth() / 2);
-    }
+    label.setAttribute('x', bar.getX() + this.task.style.textPaddingLeft);
+
+    // if (label.getBBox().width > bar.getWidth()) {
+    //   label.classList.add('big');
+    //   label.setAttribute('x', bar.getX() + bar.getWidth() + 5);
+    // } else {
+    //   label.classList.remove('big');
+    //   label.setAttribute('x', bar.getX() + bar.getWidth() / 2);
+    // }
+
   }
 
   update_handle_position() {

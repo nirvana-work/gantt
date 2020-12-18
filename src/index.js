@@ -100,7 +100,8 @@ export default class Gantt {
       // convert to Date objects
       task._start = date_utils.parse(task.start);
       task._end = date_utils.parse(task.end);
-
+      task._old_start = date_utils.parse(task.old_start)
+ 
       task._due_date_start = date_utils.parse(task.due_date_start);
       task._due_date_end = date_utils.parse(task.due_date_end);
 
@@ -282,11 +283,14 @@ export default class Gantt {
     this.make_grid();
     this.make_dates();
     this.make_bars();
-    this.make_delay_bars();
+    // not showing delays for now
+    // this.make_delay_bars();
     this.make_arrows();
     this.map_arrows_on_bars();
     this.set_width();
     this.set_scroll_position();
+    //https://stackoverflow.com/questions/26225402/dynamic-svg-animation-only-works-once
+    this.$svg.setCurrentTime(0) // needed for animations with begin attr to kick in
   }
 
   setup_layers() {
@@ -305,7 +309,7 @@ export default class Gantt {
     this.make_grid_background();
     this.make_grid_rows();
     this.make_grid_header();
-    this.make_grid_ticks();
+    // this.make_grid_ticks(); dont make vertical lines in grid
     this.make_grid_highlights();
   }
 
@@ -351,14 +355,15 @@ export default class Gantt {
         append_to: rows_layer
       });
 
-      createSVG('line', {
-        x1: 0,
-        y1: row_y + row_height,
-        x2: row_width,
-        y2: row_y + row_height,
-        class: 'row-line',
-        append_to: lines_layer
-      });
+      // dont create divider lines
+      // createSVG('line', {
+      //   x1: 0,
+      //   y1: row_y + row_height,
+      //   x2: row_width,
+      //   y2: row_y + row_height,
+      //   class: 'row-line',
+      //   append_to: lines_layer
+      // });
 
       row_y += this.options.bar_height + this.options.padding;
     }

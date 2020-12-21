@@ -219,13 +219,18 @@ export default class Gantt {
   setup_gantt_dates() {
     this.gantt_start = this.gantt_end = null;
 
-    for (let task of this.tasks) {
-      // set global start and end date
-      if (!this.gantt_start || task._start < this.gantt_start) {
-        this.gantt_start = task._start;
-      }
-      if (!this.gantt_end || task._end > this.gantt_end) {
-        this.gantt_end = task._end;
+    if (this.tasks[0].gantt_start) {
+      this.gantt_start = this.tasks[0].gantt_start
+      this.gantt_end = this.tasks[0].gantt_end
+    } else {
+      for (let task of this.tasks) {
+        // set global start and end date
+        if (!this.gantt_start || task._start < this.gantt_start) {
+          this.gantt_start = task._start;
+        }
+        if (!this.gantt_end || task._end > this.gantt_end) {
+          this.gantt_end = task._end;
+        }
       }
     }
 
@@ -237,14 +242,14 @@ export default class Gantt {
       this.gantt_start = date_utils.add(this.gantt_start, -7, 'day');
       this.gantt_end = date_utils.add(this.gantt_end, 7, 'day');
     } else if (this.view_is(VIEW_MODE.MONTH)) {
-      this.gantt_start = date_utils.start_of(this.gantt_start, 'year');
-      this.gantt_end = date_utils.add(this.gantt_end, 1, 'year');
+      this.gantt_start = date_utils.add(this.gantt_start, -1, 'month');
+      this.gantt_end = date_utils.add(this.gantt_end, 1, 'month');
     } else if (this.view_is(VIEW_MODE.YEAR)) {
       this.gantt_start = date_utils.add(this.gantt_start, -2, 'year');
       this.gantt_end = date_utils.add(this.gantt_end, 2, 'year');
-    } else {
-      this.gantt_start = date_utils.add(this.gantt_start, -20, 'day');
-      this.gantt_end = date_utils.add(this.gantt_end, 20, 'day');
+    } else if(!this.options.hide_padding) {
+      this.gantt_start = date_utils.add(this.gantt_start, -this.options.date_padding || -20, 'day');
+      this.gantt_end = date_utils.add(this.gantt_end, this.options.date_padding || 20, 'day');
     }
   }
 
@@ -289,6 +294,7 @@ export default class Gantt {
     this.map_arrows_on_bars();
     this.set_width();
     this.set_scroll_position();
+    this.track_scroll_position()
     //https://stackoverflow.com/questions/26225402/dynamic-svg-animation-only-works-once
     this.$svg.setCurrentTime(0) // needed for animations with begin attr to kick in
   }
@@ -638,19 +644,65 @@ export default class Gantt {
     const parent_element = this.$svg.parentElement;
     if (!parent_element) return;
 
-    const hours_before_first_task = date_utils.diff(
-      this.get_oldest_starting_date(),
-      this.gantt_start,
-      'hour'
-    );
+    let scroll_pos
+    if (this.scroll_date) {
+      console.log('got scroll date', this.scroll_date)
+      scroll_pos = this.compute_x(this.scroll_date)
+    } else {
+      const hours_before_first_task = date_utils.diff(
+        this.get_oldest_starting_date(),
+        this.gantt_start,
+        'hour'
+      );
+  
+      scroll_pos =
+        hours_before_first_task /
+        this.options.step *
+        this.options.column_width -
+        this.options.column_width;
+    }
 
-    const scroll_pos =
-      hours_before_first_task /
-      this.options.step *
-      this.options.column_width -
-      this.options.column_width;
+    console.log('scroll pos', scroll_pos)
 
     parent_element.scrollLeft = scroll_pos;
+  }
+
+  compute_x(date) {
+    const { step, column_width } = this.options;
+    const gantt_start = this.gantt_start;
+
+    const diff = date_utils.diff(date, gantt_start, 'hour');
+    let x = diff / step * column_width;
+
+    return x;
+  }
+
+  compute_date_from_x(x) {
+    const { step, column_width } = this.options;
+    const gantt_start = this.gantt_start;
+    const diff = x * step / column_width
+    const date = date_utils.add(gantt_start, diff, 'hour');
+
+    return date;
+  }
+
+  track_scroll_position() {
+    const parent_element = this.$svg.parentElement;
+    if (!parent_element) {
+      console.log('no parent to attach listener')
+      return;
+    }
+
+    $.on(
+      parent_element,
+      'scroll',
+      (e) => {
+        // console.log('scrolling parent', e)
+        const left = e.target.scrollLeft
+        this.scroll_date = this.compute_date_from_x(left)
+        console.log('scrolling date', this.scroll_date)
+      }
+    )
   }
 
   bind_grid_click() {

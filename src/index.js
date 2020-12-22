@@ -219,7 +219,7 @@ export default class Gantt {
   setup_gantt_dates() {
     this.gantt_start = this.gantt_end = null;
 
-    if (this.tasks[0].gantt_start) {
+    if (this.tasks[0] && this.tasks[0].gantt_start) {
       this.gantt_start = this.tasks[0].gantt_start
       this.gantt_end = this.tasks[0].gantt_end
     } else {

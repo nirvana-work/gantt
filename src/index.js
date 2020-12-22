@@ -646,7 +646,7 @@ export default class Gantt {
 
     let scroll_pos
     if (this.scroll_date) {
-      console.log('got scroll date', this.scroll_date)
+      // console.log('got scroll date', this.scroll_date)
       scroll_pos = this.compute_x(this.scroll_date)
     } else {
       const hours_before_first_task = date_utils.diff(
@@ -662,7 +662,7 @@ export default class Gantt {
         this.options.column_width;
     }
 
-    console.log('scroll pos', scroll_pos)
+    // console.log('scroll pos', scroll_pos)
 
     parent_element.scrollLeft = scroll_pos;
   }
@@ -700,7 +700,7 @@ export default class Gantt {
         // console.log('scrolling parent', e)
         const left = e.target.scrollLeft
         this.scroll_date = this.compute_date_from_x(left)
-        console.log('scrolling date', this.scroll_date)
+        // console.log('scrolling date', this.scroll_date)
       }
     )
   }

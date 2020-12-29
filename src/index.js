@@ -441,7 +441,7 @@ export default class Gantt {
       const x =
         date_utils.diff(date_utils.today(), this.gantt_start, 'hour') /
         this.options.step *
-        this.options.column_width;
+        this.options.column_width - (this.options.today_width || 0);
       const y = 0;
 
       const width = this.options.column_width;

@@ -331,8 +331,8 @@ export default class Bar {
     if (width && width >= this.gantt.options.column_width) {
       this.update_attr(bar, 'width', width);
     }
-    this.update_label_position();
-    this.update_handle_position();
+    // this.update_label_position();
+    // this.update_handle_position();
     this.update_progressbar_position();
     this.update_arrow_position();
   }

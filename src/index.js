@@ -242,8 +242,8 @@ export default class Gantt {
       this.gantt_start = date_utils.add(this.gantt_start, -7, 'day');
       this.gantt_end = date_utils.add(this.gantt_end, 7, 'day');
     } else if (this.view_is(VIEW_MODE.MONTH)) {
-      this.gantt_start = date_utils.add(this.gantt_start, -1, 'month');
-      this.gantt_end = date_utils.add(this.gantt_end, 1, 'month');
+      this.gantt_start = date_utils.start_of(date_utils.add(this.gantt_start, -1, 'year'), 'year');
+      this.gantt_end = date_utils.add(this.gantt_end, 1, 'year');
     } else if (this.view_is(VIEW_MODE.YEAR)) {
       this.gantt_start = date_utils.add(this.gantt_start, -2, 'year');
       this.gantt_end = date_utils.add(this.gantt_end, 2, 'year');
@@ -321,11 +321,15 @@ export default class Gantt {
 
   make_grid_background() {
     const grid_width = this.dates.length * this.options.column_width;
-    const grid_height =
+    let grid_height =
       this.options.header_height +
       this.options.padding +
       (this.options.bar_height + this.options.padding) *
       this.tasks.length;
+    
+    if (this.options.min_height && this.options.min_height > grid_height) {
+      grid_height = this.options.min_height
+    }
 
     createSVG('rect', {
       x: 0,
@@ -337,7 +341,7 @@ export default class Gantt {
     });
 
     $.attr(this.$svg, {
-      height: grid_height + this.options.padding + 100,
+      height: grid_height,
       width: '100%'
     });
   }
@@ -433,19 +437,21 @@ export default class Gantt {
 
   make_grid_highlights() {
     // highlight today's date
-    if (this.view_is(VIEW_MODE.DAY)) {
+    // if (this.view_is(VIEW_MODE.DAY)) {
       const x =
         date_utils.diff(date_utils.today(), this.gantt_start, 'hour') /
         this.options.step *
-        this.options.column_width;
+        this.options.column_width - (this.options.today_width || 0);
       const y = 0;
 
       const width = this.options.column_width;
-      const height =
-        (this.options.bar_height + this.options.padding) *
-        this.tasks.length +
-        this.options.header_height +
-        this.options.padding / 2;
+      // const height =
+      //   (this.options.bar_height + this.options.padding) *
+      //   this.tasks.length +
+      //   this.options.header_height +
+      //   this.options.padding / 2;
+
+      const height = this.$svg.getAttribute('height')
 
       createSVG('rect', {
         x,
@@ -455,7 +461,7 @@ export default class Gantt {
         class: 'today-highlight',
         append_to: this.layers.grid
       });
-    }
+    // }
   }
 
   make_dates() {

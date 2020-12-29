@@ -437,7 +437,7 @@ export default class Gantt {
 
   make_grid_highlights() {
     // highlight today's date
-    if (this.view_is(VIEW_MODE.DAY)) {
+    // if (this.view_is(VIEW_MODE.DAY)) {
       const x =
         date_utils.diff(date_utils.today(), this.gantt_start, 'hour') /
         this.options.step *
@@ -461,7 +461,7 @@ export default class Gantt {
         class: 'today-highlight',
         append_to: this.layers.grid
       });
-    }
+    // }
   }
 
   make_dates() {

@@ -64,8 +64,11 @@ function getAnimationElement(
     keySplines: cubic_bezier('ease-out')
   });
   svgElement.appendChild(animateElement);
-  animateElement.beginElement()
-
+  try {
+    animateElement.beginElement()
+  } catch (error) {
+    // console.error(error)
+  }
   return svgElement;
 }
 
